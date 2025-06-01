@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyschemia-crypto"
+dynamic = ["version"]
+description = "OBINexus Cryptographic Interoperability Layer"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "OBINexus Computing", email = "nnamdi@obinexus.com"},
+]
+keywords = ["cryptography", "interoperability", "regex", "patterns"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers", 
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security :: Cryptography",
+]
+dependencies = [
+    "cryptography>=3.4.8",
+    "typing-extensions>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.12",
+    "black>=21.0",
+    "mypy>=0.910",
+    "flake8>=3.9",
+]
+
+[project.urls]
+Homepage = "https://github.com/obinexus/pyschemia-crypto"
+Repository = "https://github.com/obinexus/pyschemia-crypto.git"
+Documentation = "https://pyschemia-crypto.readthedocs.io"
+
+[tool.setuptools]
+packages = ["pyschemia_crypto"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

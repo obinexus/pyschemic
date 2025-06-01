@@ -1,0 +1,56 @@
+name: PyPI Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+        - legacy
+        - stable  
+        - experimental
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+    
+    - name: Configure version suffix
+      run: |
+        VERSION_SUFFIX=""
+        if [ "${{ github.event.inputs.version_type }}" = "legacy" ]; then
+          VERSION_SUFFIX="-legacy"
+        elif [ "${{ github.event.inputs.version_type }}" = "experimental" ]; then
+          VERSION_SUFFIX="-experimental"
+        fi
+        echo "VERSION_SUFFIX=$VERSION_SUFFIX" >> $GITHUB_ENV
+    
+    - name: Build package
+      run: python -m build
+    
+    - name: Check package
+      run: twine check dist/*
+    
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        twine upload dist/*
